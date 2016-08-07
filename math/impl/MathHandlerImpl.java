@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import com.meowingtwurtle.math.api.IMathGroup;
 import com.meowingtwurtle.math.api.IMathHandler;
 
-public enum MathHandler implements IMathHandler {
+public enum MathHandlerImpl implements IMathHandler {
 
     INSTANCE;
 
