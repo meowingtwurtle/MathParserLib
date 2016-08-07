@@ -1,6 +1,8 @@
 package com.meowingtwurtle.math.impl;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -22,7 +24,7 @@ public class MathGroupDivision implements IMathGroup {
         BigDecimal ret = components[0].eval();
                 
         for (int x = 1; x < components.length; x++) {
-            ret = ret.divide(components[x].eval());
+            ret = ret.divide(components[x].eval(), 8, RoundingMode.HALF_EVEN);
         }
         
         return ret;
