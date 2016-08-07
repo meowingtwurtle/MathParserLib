@@ -1,33 +1,86 @@
 package com.meowingtwurtle.math.impl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.regex.Matcher;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.meowingtwurtle.math.api.IMathGroup;
 import com.meowingtwurtle.math.api.IMathHandler;
+import com.meowingtwurtle.math.impl.function.IMathFunction;
+import com.meowingtwurtle.math.impl.function.MathFunctionAbs;
+import com.meowingtwurtle.math.impl.function.MathFunctionCos;
+import com.meowingtwurtle.math.impl.function.MathFunctionSin;
+import com.meowingtwurtle.math.impl.function.MathFunctionTan;
 
 public enum MathHandlerImpl implements IMathHandler {
 
     INSTANCE;
+    
+    private Map<String, Class<?>> functions = new HashMap<String, Class<?>>() {
+        /**
+        * 
+        */
+        private static final long serialVersionUID = -8782756002049336410L;
+
+        {
+            put("sin", MathFunctionSin.class);
+            put("cos", MathFunctionCos.class);
+            put("tan", MathFunctionTan.class);
+            put("abs", MathFunctionAbs.class);
+        }
+    };
 
     public IMathGroup parse(String exp) {
         exp = exp.trim().replaceAll("\\s+", "");
-
+        System.out.println("parse: " + exp);
         if (!(exp.contains("+") || exp.contains("-") || exp.contains("*") || exp.contains("/") || exp.contains("(") || exp.contains(")"))) {
-            return new MathGroupBasic(new BigDecimal(exp));
+            System.out.println("Basic group detected, returning");
+            return new MathGroupBasic(new BigDecimal(exp == null || exp.equals("") ? "0" : exp));
         }
 
         if (!exp.contains("(") && !exp.contains(")")) {
-            return parseNoParens(exp);
+            IMathGroup ret = parseNoParens(exp);
+            System.out.println(ret);
+            return ret;
         } else {
             if (countCharInString(exp, '(') != countCharInString(exp, ')')) {
+                System.out.println("Mismatched parens");
                 return null;
             }
-            return parseWithParens(exp);
+            for (String s : functions.keySet()) {
+                if (exp.startsWith(s)) {
+                    IMathGroup ret = parseWithFunction(exp, s);
+                    System.out.println(ret);
+                    return ret;
+                }
+            }
+            IMathGroup ret = 
+            parseWithParensNoFunction(exp);
+            System.out.println(ret);
+            return ret;
         }
     }
     
+    private IMathGroup parseWithFunction(String exp, String functionName) {
+        String firstParenGroup = getFirstParenGroup(exp);
+        IMathGroup functionParam = parse(firstParenGroup);
+        Class<?> functionClass = functions.get(functionName);
+        if (functionClass != null) {
+            try {
+                Object function = functionClass.getConstructor(IMathGroup.class).newInstance(functionParam);
+                return parse(exp.replace(functionName + firstParenGroup, ((IMathFunction) function).eval().toString()));
+            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+                    | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+                e.printStackTrace();
+                return null;
+            }
+        } else {
+            System.out.println("Error with function parse");
+            return null;
+        }
+    }
+
     private int countCharInString(String s, char target) {
         int ret = 0;
         
@@ -40,9 +93,17 @@ public enum MathHandlerImpl implements IMathHandler {
         return ret;
     }
 
-    private IMathGroup parseWithParens(String exp) {
-        System.out.println("paren parse of: " + exp);
-        
+    private IMathGroup parseWithParensNoFunction(String exp) {        
+        String subBase = getFirstParenGroup(exp);
+        String subNoParens = subBase.substring(1, subBase.length() - 1);
+        BigDecimal parseResult = parse(subNoParens).eval();
+//        String quoteToReplace = cleanReplacementString(Matcher.quoteReplacement(subBase));
+        String quoteToReplace = subBase;
+        exp = exp.replace(quoteToReplace, parseResult.toString());
+        return parse(exp);
+    }
+    
+    private String getFirstParenGroup(String exp) {
         int firstGroupOpenIndex = -1;
         int firstGroupCloseIndex = -1;
         
@@ -67,18 +128,15 @@ public enum MathHandlerImpl implements IMathHandler {
             }
             
             if (openGroups < 0) {
+                System.out.println("Too many close parens for num of openParens");
                 return null;
             }
             
             if (openFound && openGroups == 0) {
-                String subBase = exp.substring(firstGroupOpenIndex, firstGroupCloseIndex + 1);
-                String subNoParens = subBase.substring(1, subBase.length() - 1);
-                BigDecimal parseResult = parse(subNoParens).eval();
-                String quoteToReplace = cleanReplacementString(Matcher.quoteReplacement(subBase));
-                exp = exp.replaceFirst(quoteToReplace, parseResult.toString());
-                return parse(exp);
+                return exp.substring(firstGroupOpenIndex, firstGroupCloseIndex + 1);
             }
         }
+        System.out.println("Error with no-paren parse");
         return null;
     }
     
@@ -88,7 +146,7 @@ public enum MathHandlerImpl implements IMathHandler {
 
     private IMathGroup parseNoParens(String exp) {
         // a*b*c/d+c
-        // AddGroup(MathGroupMultiply(new MathGroupBasic(a), "b", "c/d"), "")
+        // AddGroup(MathGroupMultiply(new MathFunctionSin(a), "b", "c/d"), "")
 
         try {
 
