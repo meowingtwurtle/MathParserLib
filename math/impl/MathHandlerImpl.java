@@ -1,18 +1,13 @@
 package com.meowingtwurtle.math.impl;
 
+import com.meowingtwurtle.math.api.IMathGroup;
+import com.meowingtwurtle.math.api.IMathHandler;
+import com.meowingtwurtle.math.impl.function.*;
+
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.meowingtwurtle.math.api.IMathGroup;
-import com.meowingtwurtle.math.api.IMathHandler;
-import com.meowingtwurtle.math.impl.function.IMathFunction;
-import com.meowingtwurtle.math.impl.function.MathFunctionAbs;
-import com.meowingtwurtle.math.impl.function.MathFunctionCos;
-import com.meowingtwurtle.math.impl.function.MathFunctionSin;
-import com.meowingtwurtle.math.impl.function.MathFunctionSqrt;
-import com.meowingtwurtle.math.impl.function.MathFunctionTan;
 
 public enum MathHandlerImpl implements IMathHandler {
 
@@ -34,7 +29,7 @@ public enum MathHandlerImpl implements IMathHandler {
     };
 
     public IMathGroup parse(String exp) {
-        exp = exp.trim().replaceAll("\\s+", "");
+        exp = cleanExp(exp);
         if (exp.contains("()")) {
             return null;
         }
@@ -134,10 +129,6 @@ public enum MathHandlerImpl implements IMathHandler {
 //        System.out.println("Error with no-paren parse");
         return null;
     }
-    
-    private String cleanReplacementString(String s) {
-        return s.replace("*", "\\*").replace("+", "\\+").replace("(", "\\(").replace(")", "\\)");
-    }
 
     private IMathGroup parseNoParens(String exp) {
         // a*b*c/d+c
@@ -198,6 +189,7 @@ public enum MathHandlerImpl implements IMathHandler {
                 ret = new MathGroupBasic(retParams[0]);
             }
 
+            System.out.println("ret = " + ret);
             return ret;
         } catch (Exception e) {
             e.printStackTrace();
@@ -223,6 +215,11 @@ public enum MathHandlerImpl implements IMathHandler {
             return constants.get(exp);
         } else
             return new MathGroupBasic(new BigDecimal(exp == null || exp.equals("") ? "0" : exp));
+    }
+
+    private String cleanExp(String exp) {
+        String ret = exp.trim().replaceAll("\\s+", "").replace("++", "+").replace("--", "+");
+        return ret.equals(exp) ? ret : cleanExp(ret);
     }
 
 }
