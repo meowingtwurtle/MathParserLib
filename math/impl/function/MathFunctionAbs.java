@@ -6,7 +6,7 @@ import com.meowingtwurtle.math.api.IMathGroup;
 
 public class MathFunctionAbs implements IMathFunction {
     
-    private BigDecimal value;
+    private final BigDecimal value;
 
     public MathFunctionAbs(BigDecimal value) {
         this.value = value;

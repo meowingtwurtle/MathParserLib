@@ -6,7 +6,7 @@ import com.meowingtwurtle.math.api.IMathGroup;
 
 public class MathFunctionSin implements IMathFunction {
     
-    private BigDecimal value;
+    private final BigDecimal value;
 
     public MathFunctionSin(BigDecimal value) {
         this.value = value;

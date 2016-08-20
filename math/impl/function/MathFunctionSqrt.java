@@ -6,7 +6,7 @@ import com.meowingtwurtle.math.api.IMathGroup;
 
 public class MathFunctionSqrt implements IMathFunction {
     
-    private BigDecimal value;
+    private final BigDecimal value;
 
     public MathFunctionSqrt(BigDecimal value) {
         this.value = value;

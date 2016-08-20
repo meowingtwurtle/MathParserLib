@@ -1,21 +1,16 @@
 package com.meowingtwurtle.math.impl;
 
+import com.meowingtwurtle.math.api.IMathGroup;
+
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Collection;
-
-import com.meowingtwurtle.math.api.IMathGroup;
 
 public class MathGroupExponentiation implements IMathGroup {
 
-    IMathGroup[] components;
+    private final IMathGroup[] components;
 
     public MathGroupExponentiation(IMathGroup[] exps) {
         components = exps;
-    }
-    
-    public MathGroupExponentiation(Collection<IMathGroup> exps) {
-        this(exps.toArray(new IMathGroup[0]));
     }
 
     public BigDecimal eval() {

@@ -6,7 +6,7 @@ import com.meowingtwurtle.math.api.IMathGroup;
 
 public class MathFunctionTan implements IMathFunction {
     
-    private BigDecimal value;
+    private final BigDecimal value;
 
     public MathFunctionTan(BigDecimal value) {
         this.value = value;

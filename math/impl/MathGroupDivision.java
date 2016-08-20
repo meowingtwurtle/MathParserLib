@@ -1,23 +1,17 @@
 package com.meowingtwurtle.math.impl;
 
+import com.meowingtwurtle.math.api.IMathGroup;
+
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Arrays;
-import java.util.Collection;
-
-import com.meowingtwurtle.math.api.IMathGroup;
 
 public class MathGroupDivision implements IMathGroup {
 
-    IMathGroup[] components;
+    private final IMathGroup[] components;
 
     public MathGroupDivision(IMathGroup[] exps) {
         components = exps;
-    }
-    
-    public MathGroupDivision(Collection<IMathGroup> exps) {
-        this(exps.toArray(new IMathGroup[0]));
     }
 
     public BigDecimal eval() {

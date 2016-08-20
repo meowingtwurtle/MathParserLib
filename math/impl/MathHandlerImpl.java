@@ -15,7 +15,7 @@ public enum MathHandlerImpl implements IMathHandler {
 
     INSTANCE;
     
-    private Map<String, Class<?>> functions = new HashMap<String, Class<?>>() {
+    private final Map<String, Class<?>> functions = new HashMap<String, Class<?>>() {
         /**
         * 
         */
@@ -176,7 +176,7 @@ public enum MathHandlerImpl implements IMathHandler {
                 retParams[i] = parse(topLevelComponents[i]);
             }
 
-            IMathGroup ret = null;
+            IMathGroup ret;
 
             if (mode == 0) {
                 ret = new MathGroupAddition(retParams);
@@ -200,7 +200,7 @@ public enum MathHandlerImpl implements IMathHandler {
         }
     }
     
-    Map<String, IMathGroup> constants = new HashMap<String, IMathGroup>() {
+    final Map<String, IMathGroup> constants = new HashMap<String, IMathGroup>() {
         /**
          * 
          */
@@ -258,7 +258,7 @@ public enum MathHandlerImpl implements IMathHandler {
         if (constants.containsKey(exp)) {
             return constants.get(exp);
         } else
-            return new MathGroupBasic(new BigDecimal(exp == null || exp.equals("") ? "0" : exp));
+            return new MathGroupBasic(new BigDecimal(exp.equals("") ? "0" : exp));
     }
 
     private String cleanExp(String exp) {

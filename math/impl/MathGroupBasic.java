@@ -6,7 +6,7 @@ import com.meowingtwurtle.math.api.IMathGroup;
 
 public class MathGroupBasic implements IMathGroup {
     
-    private BigDecimal value;
+    private final BigDecimal value;
 
     public MathGroupBasic(BigDecimal value) {
         this.value = value;

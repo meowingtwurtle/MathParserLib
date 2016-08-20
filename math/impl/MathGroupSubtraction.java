@@ -1,23 +1,18 @@
 package com.meowingtwurtle.math.impl;
 
+import com.meowingtwurtle.math.api.IMathGroup;
+
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Collection;
-
-import com.meowingtwurtle.math.api.IMathGroup;
 
 public class MathGroupSubtraction  implements IMathGroup{
     
-    IMathGroup[] components;
+    private final IMathGroup[] components;
 
     public MathGroupSubtraction(IMathGroup... exps) {
         components = exps;
     }
-    
-    public MathGroupSubtraction(Collection<IMathGroup> exps) {
-        this(exps.toArray(new IMathGroup[0]));
-    }
-    
+
     public BigDecimal eval() {
         BigDecimal ret = components[0].eval();
                 
