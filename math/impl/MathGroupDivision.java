@@ -16,14 +16,14 @@ public class MathGroupDivision implements IMathGroup {
 
     public BigDecimal eval() {
         BigDecimal ret = components[0].eval();
-                
+
         for (int x = 1; x < components.length; x++) {
             ret = ret.divide(components[x].eval(), 8, RoundingMode.HALF_EVEN);
         }
-        
+
         return ret;
     }
-    
+
     public String toString() {
         return this.getClass().getSimpleName() + Arrays.deepToString(components);
     }

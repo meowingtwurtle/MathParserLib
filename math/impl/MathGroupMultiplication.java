@@ -5,8 +5,8 @@ import com.meowingtwurtle.math.api.IMathGroup;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
-public class MathGroupMultiplication  implements IMathGroup{
-    
+public class MathGroupMultiplication implements IMathGroup {
+
     private final IMathGroup[] components;
 
     public MathGroupMultiplication(IMathGroup... exps) {
@@ -15,14 +15,14 @@ public class MathGroupMultiplication  implements IMathGroup{
 
     public BigDecimal eval() {
         BigDecimal ret = BigDecimal.ONE;
-                
+
         for (IMathGroup x : components) {
             ret = ret.multiply(x.eval());
         }
-        
+
         return ret;
     }
-    
+
     public String toString() {
         return this.getClass().getSimpleName() + Arrays.deepToString(components);
     }

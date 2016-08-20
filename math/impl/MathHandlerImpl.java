@@ -14,11 +14,11 @@ import java.util.regex.Pattern;
 public enum MathHandlerImpl implements IMathHandler {
 
     INSTANCE;
-    
+
     private final Map<String, Class<?>> functions = new HashMap<String, Class<?>>() {
         /**
-        * 
-        */
+         *
+         */
         private static final long serialVersionUID = -8782756002049336410L;
 
         {
@@ -58,7 +58,7 @@ public enum MathHandlerImpl implements IMathHandler {
             return parseWithParensNoFunction(exp);
         }
     }
-    
+
     private IMathGroup parseWithFunction(String exp, String functionName) {
         String firstParenGroup = getFirstParenGroup(exp);
         IMathGroup functionParam = parse(firstParenGroup);
@@ -67,8 +67,7 @@ public enum MathHandlerImpl implements IMathHandler {
             try {
                 Object function = functionClass.getConstructor(IMathGroup.class).newInstance(functionParam);
                 return parse(exp.replace(functionName + firstParenGroup, ((IMathFunction) function).eval().toPlainString()));
-            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-                    | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
                 e.printStackTrace();
             }
         }
@@ -78,17 +77,17 @@ public enum MathHandlerImpl implements IMathHandler {
 
     private int countCharInString(String s, char target) {
         int ret = 0;
-        
+
         for (char c : s.toCharArray()) {
             if (c == target) {
                 ret++;
             }
         }
-        
+
         return ret;
     }
 
-    private IMathGroup parseWithParensNoFunction(String exp) {        
+    private IMathGroup parseWithParensNoFunction(String exp) {
         String subBase = getFirstParenGroup(exp);
         String subNoParens = subBase.substring(1, subBase.length() - 1);
         BigDecimal parseResult = parse(subNoParens).eval();
@@ -96,22 +95,22 @@ public enum MathHandlerImpl implements IMathHandler {
         exp = exp.replace(subBase, parseResult.toPlainString());
         return parse(exp);
     }
-    
+
     private String getFirstParenGroup(String exp) {
         int firstGroupOpenIndex = -1;
         int firstGroupCloseIndex = -1;
-        
+
         int openGroups = 0;
         boolean openFound = false;
-        
+
         for (int i = 0; i < exp.length(); i++) {
             char c = exp.charAt(i);
-            
+
             if (c == '(') {
                 if (openGroups == 0) {
                     firstGroupOpenIndex = i;
                 }
-                
+
                 openGroups++;
                 openFound = true;
             } else if (c == ')') {
@@ -120,12 +119,12 @@ public enum MathHandlerImpl implements IMathHandler {
                     firstGroupCloseIndex = i;
                 }
             }
-            
+
             if (openGroups < 0) {
 //                System.out.println("Too many close parens for num of openParens");
                 return null;
             }
-            
+
             if (openFound && openGroups == 0) {
                 return exp.substring(firstGroupOpenIndex, firstGroupCloseIndex + 1);
             }
@@ -139,7 +138,7 @@ public enum MathHandlerImpl implements IMathHandler {
             System.out.println("Contains unary minus exp");
             return parseWithUnaryMinus(exp);
         }
-        
+
         try {
 
             String[] topLevelComponents;
@@ -167,7 +166,7 @@ public enum MathHandlerImpl implements IMathHandler {
                 mode = -1;
             }
 //            System.out.println("Mode: " + mode);
-            
+
 //            System.out.println("topLevelComponents: " + Arrays.toString(topLevelComponents));
 
             IMathGroup[] retParams = new IMathGroup[topLevelComponents.length];
@@ -199,10 +198,10 @@ public enum MathHandlerImpl implements IMathHandler {
             return null;
         }
     }
-    
+
     final Map<String, IMathGroup> constants = new HashMap<String, IMathGroup>() {
         /**
-         * 
+         *
          */
         private static final long serialVersionUID = 4416580880537999100L;
 
@@ -257,8 +256,7 @@ public enum MathHandlerImpl implements IMathHandler {
         exp = exp.toUpperCase();
         if (constants.containsKey(exp)) {
             return constants.get(exp);
-        } else
-            return new MathGroupBasic(new BigDecimal(exp.equals("") ? "0" : exp));
+        } else return new MathGroupBasic(new BigDecimal(exp.equals("") ? "0" : exp));
     }
 
     private String cleanExp(String exp) {

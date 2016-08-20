@@ -1,17 +1,17 @@
 package com.meowingtwurtle.math.impl.function;
 
-import java.math.BigDecimal;
-
 import com.meowingtwurtle.math.api.IMathGroup;
 
+import java.math.BigDecimal;
+
 public class MathFunctionAbs implements IMathFunction {
-    
+
     private final BigDecimal value;
 
     public MathFunctionAbs(BigDecimal value) {
         this.value = value;
     }
-    
+
     public MathFunctionAbs(IMathGroup value) {
         this.value = value.eval();
     }
@@ -20,9 +20,9 @@ public class MathFunctionAbs implements IMathFunction {
     public BigDecimal eval() {
         return value.abs();
     }
-    
+
     public String toString() {
-        return this.getClass().getSimpleName() +  "(" + value + ")";
+        return this.getClass().getSimpleName() + "(" + value + ")";
     }
 
 }
