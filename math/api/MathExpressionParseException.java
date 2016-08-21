@@ -1,8 +1,5 @@
 package com.meowingtwurtle.math.api;
 
-/**
- * Created by jason on 8/20/16.
- */
 public class MathExpressionParseException extends RuntimeException {
     public MathExpressionParseException() {
         super();
