@@ -210,7 +210,6 @@ public enum MathHandlerImpl implements IMathHandler {
         Matcher matcherExponent = patternExponent.matcher(exp);
 
         if (matcherExponent.find()) {
-            System.out.println("Found exp");
             String sub = matcherExponent.group();
             String[] parts = sub.split("\\^");
             return parse(exp.replaceFirst(cleanReplacementString(sub), new MathGroupExponentiation(parseAll(parts)).eval().toPlainString()));
@@ -220,7 +219,6 @@ public enum MathHandlerImpl implements IMathHandler {
         Matcher matcherMultiplication = patternMultiplication.matcher(exp);
 
         if (matcherMultiplication.find()) {
-            System.out.println("Found multip");
             String sub = matcherMultiplication.group();
             String[] parts = sub.split("\\*");
             return parse(exp.replaceFirst(cleanReplacementString(sub), new MathGroupMultiplication(parseAll(parts)).eval().toPlainString()));
@@ -230,7 +228,6 @@ public enum MathHandlerImpl implements IMathHandler {
         Matcher matcherDivision = patternDivision.matcher(exp);
 
         if (matcherDivision.find()) {
-            System.out.println("Found div");
             String sub = matcherDivision.group();
             String[] parts = sub.split("/");
             return parse(exp.replaceFirst(cleanReplacementString(sub), new MathGroupDivision(parseAll(parts)).eval().toPlainString()));
