@@ -216,27 +216,31 @@ public enum MathHandlerImpl implements IMathHandler {
     private IMathGroup parseSpecialExponent(String exp) {
         String[] parts = exp.split("\\^");
 
-        if (parts.length > 2) {
-            String[] finalExps = new String[2];
-            finalExps[0] = parts[0];
-            finalExps[1] = parts[1];
-            for (int i = 0; i < parts.length;i++) {
-                finalExps[1] = finalExps[1] + parts[i];
+        try {
+            if (parts.length > 2) {
+                String[] finalExps = new String[2];
+                finalExps[0] = parts[0];
+                finalExps[1] = parts[1];
+                for (int i = 2; i < parts.length; i++) {
+                    finalExps[1] = finalExps[1] + "^" + parts[i];
+                }
+                if (finalExps[0].startsWith("$")) {
+                    return new MathGroupExponentiation(new IMathGroup[] { parse(finalExps[0]), parseSpecialExponent(finalExps[1]) });
+                } else if (finalExps[0].startsWith("#")) {
+                    return new MathGroupNegation(new MathGroupExponentiation(new com.meowingtwurtle.math.api.IMathGroup[] { parse(finalExps[0].substring(1, finalExps[0].length())), parse(finalExps[1]) }));
+                }
             }
-            if (finalExps[0].startsWith("$")) {
-                return new MathGroupExponentiation(new IMathGroup[] { parse(finalExps[0]), parseSpecialExponent(finalExps[1]) });
-            } else if (finalExps[0].startsWith("#")) {
-                return new MathGroupNegation(new MathGroupExponentiation(new com.meowingtwurtle.math.api.IMathGroup[] {parse(finalExps[0].substring(1, finalExps[0].length())), parse(finalExps[1])}));
+
+            if (parts[0].startsWith("$")) {
+                return new MathGroupExponentiation(new IMathGroup[] { new com.meowingtwurtle.math.impl.MathGroupNegation(parse(parts[0].replace("$", ""))), parse(parts[1].replace("$", "-").replace("#", "-")) });
+            } else if (parts[0].startsWith("#")) {
+                return new MathGroupNegation(new MathGroupExponentiation(new IMathGroup[] { parse(parts[0].substring(1)), parse(parts[1]) }));
+            } else {
+                return new MathGroupExponentiation(parseAll(parts));
             }
+        } catch (Exception e) {
+            throw new com.meowingtwurtle.math.api.MathExpressionParseException(e);
         }
-
-        if (parts[0].startsWith("$")) {
-            return new MathGroupExponentiation(new IMathGroup[] { new com.meowingtwurtle.math.impl.MathGroupNegation(parse(parts[0].replace("$", ""))) , parse(parts[1].replace("$", "-").replace("#", "-"))});
-        } else if (parts[0].startsWith("#")) {
-            return new MathGroupNegation(new MathGroupExponentiation(new IMathGroup[] { parse(parts[0].substring(1)), parse(parts[1]) }));
-        }
-
-        throw new com.meowingtwurtle.math.api.MathExpressionParseException("Invalid specialExponent expression");
     }
 
     private String join(Object[] arr) {
@@ -269,7 +273,7 @@ public enum MathHandlerImpl implements IMathHandler {
     }
 
     private boolean isSpecialExponent(String exp) {
-        return exp.matches("[$#]\\d+(\\.\\d*)?\\^#?\\d+(\\.\\d*)?");
+        return exp.matches("[$#]?\\d+(\\.\\d*)?(\\^[$#]?\\d+(\\.\\d*)?)+");
     }
 
     private IMathGroup parseBasicExp(String exp) {
