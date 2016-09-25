@@ -1,6 +1,6 @@
-package com.meowingtwurtle.math.api;
+package api;
 
-import com.meowingtwurtle.math.impl.MathHandlerImpl;
+import impl.MathHandlerImpl;
 
 public interface IMathHandler {
     IMathGroup parse(String exp);

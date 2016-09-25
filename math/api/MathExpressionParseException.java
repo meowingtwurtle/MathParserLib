@@ -1,4 +1,4 @@
-package com.meowingtwurtle.math.api;
+package api;
 
 public class MathExpressionParseException extends RuntimeException {
     public MathExpressionParseException() {
