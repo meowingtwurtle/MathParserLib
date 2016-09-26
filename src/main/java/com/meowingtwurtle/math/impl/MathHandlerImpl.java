@@ -135,11 +135,11 @@ public enum MathHandlerImpl implements IMathHandler {
 
         try {
 
-            javafx.util.Pair<String[], Integer> mPair = expToStringArr(exp);
+            Pair<String[], Integer> mPair = expToStringArr(exp);
 
-            String[] topLevelComponents = mPair.getKey();
+            String[] topLevelComponents = mPair.getItemA();
 
-            int mode = mPair.getValue();
+            int mode = mPair.getItemB();
 
             IMathGroup[] retParams = new IMathGroup[topLevelComponents.length];
 
@@ -170,7 +170,7 @@ public enum MathHandlerImpl implements IMathHandler {
         }
     }
 
-    private javafx.util.Pair<String[], Integer> expToStringArr(String exp) {
+    private Pair<String[], Integer> expToStringArr(String exp) {
         String[] topLevelComponents;
 
         int mode;
@@ -195,7 +195,7 @@ public enum MathHandlerImpl implements IMathHandler {
             mode = -1;
         }
 
-        return new javafx.util.Pair<>(topLevelComponents, mode);
+        return new Pair<>(topLevelComponents, mode);
     }
 
     final Map<String, IMathGroup> constants = new HashMap<String, IMathGroup>() {
