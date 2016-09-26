@@ -1,6 +1,6 @@
-package impl.function;
+package com.meowingtwurtle.math.impl.function;
 
-import api.IMathGroup;
+import com.meowingtwurtle.math.api.IMathGroup;
 
 import java.math.BigDecimal;
 import java.util.function.Function;

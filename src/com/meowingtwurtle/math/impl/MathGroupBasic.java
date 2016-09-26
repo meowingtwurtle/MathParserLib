@@ -1,24 +1,24 @@
-package impl.function;
+package com.meowingtwurtle.math.impl;
 
-import api.IMathGroup;
+import com.meowingtwurtle.math.api.IMathGroup;
 
 import java.math.BigDecimal;
 
-public class MathFunctionCos implements IMathFunction {
+public class MathGroupBasic implements IMathGroup {
 
     private final BigDecimal value;
 
-    public MathFunctionCos(BigDecimal value) {
+    public MathGroupBasic(BigDecimal value) {
         this.value = value;
     }
 
-    public MathFunctionCos(IMathGroup value) {
+    public MathGroupBasic(IMathGroup value) {
         this.value = value.eval();
     }
 
     @Override
     public BigDecimal eval() {
-        return IMathFunction.evalTrigFunction(Math::cos, value);
+        return value;
     }
 
     public String toString() {

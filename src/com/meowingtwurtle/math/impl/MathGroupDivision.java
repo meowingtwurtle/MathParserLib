@@ -1,15 +1,16 @@
-package impl;
+package com.meowingtwurtle.math.impl;
 
-import api.IMathGroup;
+import com.meowingtwurtle.math.api.IMathGroup;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 
-public class MathGroupSubtraction implements IMathGroup {
+public class MathGroupDivision implements IMathGroup {
 
     private final IMathGroup[] components;
 
-    public MathGroupSubtraction(IMathGroup... exps) {
+    public MathGroupDivision(IMathGroup[] exps) {
         components = exps;
     }
 
@@ -17,7 +18,7 @@ public class MathGroupSubtraction implements IMathGroup {
         BigDecimal ret = components[0].eval();
 
         for (int x = 1; x < components.length; x++) {
-            ret = ret.subtract(components[x].eval());
+            ret = ret.divide(components[x].eval(), 8, RoundingMode.HALF_EVEN);
         }
 
         return ret;

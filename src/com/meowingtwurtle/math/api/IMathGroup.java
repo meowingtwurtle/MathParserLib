@@ -1,4 +1,4 @@
-package api;
+package com.meowingtwurtle.math.api;
 
 import java.math.BigDecimal;
 

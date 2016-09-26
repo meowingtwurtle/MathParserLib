@@ -1,23 +1,23 @@
-package impl;
+package com.meowingtwurtle.math.impl;
 
-import api.IMathGroup;
+import com.meowingtwurtle.math.api.IMathGroup;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 
-public class MathGroupAddition implements IMathGroup {
+public class MathGroupMultiplication implements IMathGroup {
 
     private final IMathGroup[] components;
 
-    public MathGroupAddition(IMathGroup... exps) {
+    public MathGroupMultiplication(IMathGroup... exps) {
         components = exps;
     }
 
     public BigDecimal eval() {
-        BigDecimal ret = BigDecimal.ZERO;
+        BigDecimal ret = BigDecimal.ONE;
 
         for (IMathGroup x : components) {
-            ret = ret.add(x.eval());
+            ret = ret.multiply(x.eval());
         }
 
         return ret;

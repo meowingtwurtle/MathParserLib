@@ -1,8 +1,8 @@
-package impl;
+package com.meowingtwurtle.math.impl;
 
-import api.IMathGroup;
-import api.IMathHandler;
-import impl.function.*;
+import com.meowingtwurtle.math.api.IMathGroup;
+import com.meowingtwurtle.math.api.IMathHandler;
+import com.meowingtwurtle.math.impl.function.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -32,7 +32,7 @@ public enum MathHandlerImpl implements IMathHandler {
         exp = cleanExp(exp);
 
         if (exp.contains("()")) {
-            throw new api.MathExpressionParseException("Invalid Expression: contains \"()\"");
+            throw new com.meowingtwurtle.math.api.MathExpressionParseException("Invalid Expression: contains \"()\"");
         }
 
         if (!(exp.contains("+") || exp.contains("-") || exp.contains("*") || exp.contains("/") || exp.contains("^") || exp.contains("(") || exp.contains(")"))) {
@@ -43,7 +43,7 @@ public enum MathHandlerImpl implements IMathHandler {
             return parseNoParens(exp);
         } else {
             if (countCharInString(exp, '(') != countCharInString(exp, ')')) {
-                throw new api.MathExpressionParseException("Mismatched parens");
+                throw new com.meowingtwurtle.math.api.MathExpressionParseException("Mismatched parens");
             }
             for (String s : functions.keySet()) {
                 if (exp.startsWith(s)) {
@@ -66,7 +66,7 @@ public enum MathHandlerImpl implements IMathHandler {
                 e.printStackTrace();
             }
         }
-        throw new api.MathExpressionParseException("Error with function parse");
+        throw new com.meowingtwurtle.math.api.MathExpressionParseException("Error with function parse");
     }
 
     private int countCharInString(String s, char target) {
@@ -118,14 +118,14 @@ public enum MathHandlerImpl implements IMathHandler {
             }
 
             if (openGroups < 0) {
-                throw new api.MathExpressionParseException("Too many close parens for num of openParens");
+                throw new com.meowingtwurtle.math.api.MathExpressionParseException("Too many close parens for num of openParens");
             }
 
             if (openFound && openGroups == 0) {
                 return exp.substring(firstGroupOpenIndex, firstGroupCloseIndex + 1);
             }
         }
-        throw new api.MathExpressionParseException("Unknown Error in getFirstParenGroup");
+        throw new com.meowingtwurtle.math.api.MathExpressionParseException("Unknown Error in getFirstParenGroup");
     }
 
     private IMathGroup parseNoParens(String exp) {
@@ -166,7 +166,7 @@ public enum MathHandlerImpl implements IMathHandler {
             return ret;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new api.MathExpressionParseException(e);
+            throw new com.meowingtwurtle.math.api.MathExpressionParseException(e);
         }
     }
 
@@ -227,19 +227,19 @@ public enum MathHandlerImpl implements IMathHandler {
                 if (finalExps[0].startsWith("$")) {
                     return new MathGroupExponentiation(new IMathGroup[] { parse(finalExps[0]), parseSpecialExponent(finalExps[1]) });
                 } else if (finalExps[0].startsWith("#")) {
-                    return new MathGroupNegation(new MathGroupExponentiation(new api.IMathGroup[] { parse(finalExps[0].substring(1, finalExps[0].length())), parse(finalExps[1]) }));
+                    return new MathGroupNegation(new MathGroupExponentiation(new com.meowingtwurtle.math.api.IMathGroup[] { parse(finalExps[0].substring(1, finalExps[0].length())), parse(finalExps[1]) }));
                 }
             }
 
             if (parts[0].startsWith("$")) {
-                return new MathGroupExponentiation(new IMathGroup[] { new impl.MathGroupNegation(parse(parts[0].replace("$", ""))), parse(parts[1].replace("$", "-").replace("#", "-")) });
+                return new MathGroupExponentiation(new IMathGroup[] { new com.meowingtwurtle.math.impl.MathGroupNegation(parse(parts[0].replace("$", ""))), parse(parts[1].replace("$", "-").replace("#", "-")) });
             } else if (parts[0].startsWith("#")) {
                 return new MathGroupNegation(new MathGroupExponentiation(new IMathGroup[] { parse(parts[0].substring(1)), parse(parts[1]) }));
             } else {
                 return new MathGroupExponentiation(parseAll(parts));
             }
         } catch (Exception e) {
-            throw new api.MathExpressionParseException(e);
+            throw new com.meowingtwurtle.math.api.MathExpressionParseException(e);
         }
     }
 
